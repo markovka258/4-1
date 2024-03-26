@@ -1,70 +1,63 @@
 using System;
 using System.Collections.Concurrent;
 
-sealed class Array<T> : ArrayBase<T> 
+public sealed class Array<T> : IArray<T> 
 {
     private Random random;
-    private IValueProvider<T> _provider;
     private T[] array;
+    private int size;
+    
 
-    public Array(IValueProvider<T> provider) 
+    public Array(Func<T[], bool, T[]> action) 
     {    
-        _provider = provider;
-
-        InitializeArray();
-    }
-
-    protected override void ArrUsInp()
-     {
-        Console.Write("Enter the length of the array1: ");
-        string lengthInput = Console.ReadLine();
-
-        int.TryParse(lengthInput, out int length);
-
-        array = new T[length];
-
-        Console.WriteLine($"Введите {array.Length} значений:");
-
-        for (int i = 0; i < array.Length; i++)
-        {
-            string userInput = Console.ReadLine();
-
-            if (int.TryParse(userInput, out int value))
-            {
-                array[i] = (T)(object)value;
-            }
-            else
-            {
-                throw new ArgumentException("Invalid user input");
-            }
-        }
+        InitializeArray(action);
     }
 
 
-
-
-    protected override void ArrRand()
-    {        
-        Console.Write("Enter the length of the array1: ");
-        string lengthInput = Console.ReadLine();
-
-        int.TryParse(lengthInput, out int length);
-        
-        array = new T[length];
-        
-        for (int i = 0; i < array.Length; i++)
-        {
-            array[i] = _provider.GetRandomValue();
-        }
-    }
-
-    public override void Print()
+    private void InitializeArray(Func<T[], bool, T[]> action)
     {
+        Console.Write("Enter 'true' for user input or 'false' for random input: ");
+        string userInput = Console.ReadLine();
+
+        bool.TryParse(userInput, out bool isUserInput);
+        
+        if (isUserInput)
+        {
+            array = new T[int.Parse(Console.ReadLine())];
+        }
+        else
+        {
+            array = new T[size];
+        }
+        array = action(array, isUserInput);
+    }
+
+
+    public void Print()
+    {
+        Console.WriteLine("Array");
         foreach (T value in array)
         {
             Console.Write(value + " ");
         }
         Console.WriteLine();
+    }
+    
+
+    public void Add(T _array)
+    {
+        if (size == array.Length)
+        {
+            Array.Resize(ref array, array.Length * 2 + 1);
+        }
+        array[size] = _array;
+        size++;
+    }
+
+
+    public void Sort()
+    {
+        Array.Sort(array);
     }
 
 }
