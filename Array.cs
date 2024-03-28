@@ -1,36 +1,27 @@
 using System;
 using System.Collections.Concurrent;
 
-public sealed class Array<T> : IArray<T> 
+public sealed class Array<T> : IArray<T>
 {
     private Random random;
     private T[] array;
     private int size;
+    private int capacity;
+
     
 
-    public Array(Func<T[], bool, T[]> action) 
-    {    
-        InitializeArray(action);
-    }
-
-
-    private void InitializeArray(Func<T[], bool, T[]> action)
+    public Array(int _capacity) 
     {
-        Console.Write("Enter 'true' for user input or 'false' for random input: ");
-        string userInput = Console.ReadLine();
-
-        bool.TryParse(userInput, out bool isUserInput);
-        
-        if (isUserInput)
-        {
-            array = new T[int.Parse(Console.ReadLine())];
-        }
-        else
-        {
-            array = new T[size];
-        }
-        array = action(array, isUserInput);
+        array = new T[_capacity];
+        capacity = _capacity;
+        size = 0;
     }
+
+
+    public Array():this(7)
+    {
+    }
+
 
 
     public void Print()
@@ -42,22 +33,96 @@ public sealed class Array<T> : IArray<T>
         }
         Console.WriteLine();
     }
-    
 
-    public void Add(T _array)
+
+
+    public void Add(T el)
     {
-        if (size == array.Length)
+        if(size>=capacity)
         {
-            Array.Resize(ref array, array.Length * 2 + 1);
+            capacity = 2 * capacity + 1;
+            T[] arr = new T[capacity];
+            Array.Copy(array, arr,size);
+            array = arr;
         }
-        array[size] = _array;
+        array[size] = el;
         size++;
     }
 
 
+    
+
+    public void DelEl(int i)
+    {
+        if(i<=size)
+        {
+            T[] arr = new T[capacity];
+            for (int t = 0; t < size; t++)
+            {
+                if (t != i)
+                {
+                    arr[t] = array[t];
+                }
+            }
+            size--;
+            array = arr;
+        }
+        else
+        {
+            Console.WriteLine("Error (Index is out of range)");
+        }
+    }
+
+
+
     public void Sort()
     {
-        Array.Sort(array);
+        Array.Sort(array, 0, size);
     }
+
+
+
+    public bool EvenIfOne(Func<T, bool> action)
+    {
+        for (int i = 0; i < size; i++)
+        {
+            if (action(array[i]))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+
+    public bool ForEach(Func<T, bool> action)
+    {
+        for (int i = 0; i < size; i++)
+        {
+            if (!action(array[i]))
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
+
+
+    public void CountByCondition(Func<T, bool> action)
+    {
+        int n = 0;
+        for(int i = 0; i<size; i++)
+        {
+            if(action(array[i]))
+            {
+                n++;
+            }
+        }
+        Console.WriteLine(n);
+    }
+
+
 
 }

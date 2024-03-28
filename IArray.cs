@@ -2,35 +2,16 @@ using System;
 
 interface IArray<T> : IPrinter
     {
-        void Add(T _array);
+        void Add(T el);
 
-        void Remove(T element);
-
-        void ForEach(Action<T> action);
-
-        TResult[] Project<TResult>(Func<T, TResult> project);
+        void DelEl(int i);
 
         void Sort();
 
-        void Reverse();
+        bool EvenIfOne(Func<T, bool> action);
 
-        T[] Get(int index, int count);
+        bool ForEach(Func<T, bool> action);
 
-        int Count();
-
-        int CountByCondition(Func<T, bool> condition);
-
-        T Max();
+        void CountByCondition(Func<T, bool> action);
         
-        T Min();
-
-        TResult Max<TResult>(Func<T, TResult> projector);
-
-        TResult Min<TResult>(Func<T, TResult> projector);
-
-        T Find(Func<T, bool> condition);
-
-        T[] GetByCondition(Func<T, bool> condition);
-
-        bool IfAny(Func<T, bool> condition);
-    }
+       }
