@@ -10,7 +10,7 @@ interface IArray<T>
 
         int Count();
 
-        void CountByCondition(Func<T, bool> condition);
+        int CountByCondition(Func<T, bool> condition);
 
         bool EvenIfOne(Func<T, bool> condition);
 
@@ -32,7 +32,5 @@ interface IArray<T>
 
         // TResult Max<TResult>(Func<T, TResult> projector);
 
-        int CountWithIf(Func<T, bool> condition);
-    
 
        }

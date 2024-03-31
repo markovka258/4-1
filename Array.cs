@@ -56,16 +56,20 @@ public sealed class Array<T> : IArray<T>
     {
         if(i<=size)
         {
-            T[] arr = new T[capacity];
+            T[] mass = new T[capacity];
             for (int t = 0; t < size; t++)
             {
-                if (t != i)
+                if (t < i)
                 {
-                    arr[t] = array[t];
+                    mass[t] = array[t];
+                }
+                else if (t > i)
+                {
+                    mass[t-1] = array[t];
                 }
             }
             size--;
-            array = arr;
+            array = mass;
         }
     }
 
@@ -83,7 +87,7 @@ public sealed class Array<T> : IArray<T>
     }
 
 
-    public void CountByCondition(Func<T, bool> condition)
+    public int CountByCondition(Func<T, bool> condition)
     {
         int n = 0;
         for(int i = 0; i<size; i++)
@@ -93,7 +97,7 @@ public sealed class Array<T> : IArray<T>
                 n++;
             }
         }
-        Console.WriteLine(n);
+        return n;
     }
 
 
@@ -131,19 +135,23 @@ public sealed class Array<T> : IArray<T>
     }
 
 
-    // public T Find(Func<T, bool> condition)
-    // {
-    //     ArgumentNullException.ThrowIfNull(condition);
+    public T Find(Func<T, bool> condition)
+    {
+        if (condition == null)
+        {
+            throw new ArgumentNullException(nameof(condition));
+        }
 
-    //     for (int i = 0; i < size;i++)
-    //     {
-    //         if (condition(array[i]))
-    //         {
-    //             return array[i];
-    //         }
-    //     }
-    //     throw new Exception("No elements matched this condition");
-    // }
+
+        for (int i = 0; i < size;i++)
+        {
+            if (condition(array[i]))
+            {
+                return array[i];
+            }
+        }
+        throw new Exception("No elements matched this condition");
+    }
 
 
 
@@ -156,22 +164,22 @@ public sealed class Array<T> : IArray<T>
     }
 
 
-    // public T[] FindAll(Func<T, bool> condition)
-    // {
-    //     T[] elements = new T[Length(condition)];
-    //     int index = 0;
+    public T[] FindAll(Func<T, bool> condition)
+    {
+        T[] elements = new T[CountByCondition(condition)];
+        int index = 0;
 
-    //     for (int i = 0; i < size; i++)
-    //     {
-    //         if (condition(array[i]))
-    //         {
-    //             elements[index] = array[i];
-    //             index++;
-    //         }
-    //     }
+        for (int i = 0; i < size; i++)
+        {
+            if (condition(array[i]))
+            {
+                elements[index] = array[i];
+                index++;
+            }
+        }
 
-    //     return elements;
-    // }
+        return elements;
+    }
 
 
 
@@ -204,6 +212,23 @@ public sealed class Array<T> : IArray<T>
     }
 
 
+    public T Max()
+    {
+        T[] values = new T[size];
+        for (int i = 0; i < size; i++)
+        {
+            values[i] = array[i];
+        }
+        Array.Sort(values);
+        return values[size-1];
+    }
+
+
+
+
+
+
+
     // public TResult Min<TResult>(Func<T, TResult> projector)
     // {
     //     ArgumentNullException.ThrowIfNull(projector);
@@ -222,16 +247,10 @@ public sealed class Array<T> : IArray<T>
     //     return min;
     // }
 
-    public T Max()
-    {
-        T[] values = new T[size];
-        for (int i = 0; i < size; i++)
-        {
-            values[i] = array[i];
-        }
-        Array.Sort(values);
-        return values[size-1];
-    }
+
+
+
+
 
     // public TResult Max<TResult>(Func<T, TResult> projector)
     // {
@@ -250,20 +269,6 @@ public sealed class Array<T> : IArray<T>
     //     }
     //     return max;
     // }
-
-
-    public int CountWithIf(Func<T, bool> condition)
-    {
-        int c = 0;
-        for(int i = 0; i<size; i++)
-        {
-            if(condition(array[i]))
-            {
-                c++;
-            }
-        }
-        return c;
-    }
 
 
 }
