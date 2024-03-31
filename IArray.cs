@@ -1,6 +1,6 @@
 using System;
 
-interface IArray<T> : IPrinter
+interface IArray<T> 
     {
         void Add(T el);
 

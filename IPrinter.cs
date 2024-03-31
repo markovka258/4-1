@@ -1,4 +1,0 @@
-interface IPrinter
-{
-    void Print();
-}
