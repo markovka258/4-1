@@ -4,7 +4,7 @@ interface IArray<T> : IPrinter
     {
         void Add(T el);
 
-        void Remove(int i);
+        void DelEl(int i);
 
         void Sort();
 
@@ -18,16 +18,21 @@ interface IArray<T> : IPrinter
 
         bool Contains(T el);
 
-        T Find(Func<T, bool> condition);
+        // T Find(Func<T, bool> condition);
         
-        T[] FindAll(Func<T, bool> condition);
+        void ApplyToAll(Func<T, T> action);
+
+        void Reverse();        // T[] FindAll(Func<T, bool> condition);
 
         T Min();
 
-        TResult Min<TResult>(Func<T, TResult> projector);
+        // TResult Min<TResult>(Func<T, TResult> projector);
 
         T Max();
 
-        TResult Max<TResult>(Func<T, TResult> projector);
+        // TResult Max<TResult>(Func<T, TResult> projector);
+
+        int CountWithIf(Func<T, bool> condition);
+    
 
        }

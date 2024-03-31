@@ -6,6 +6,7 @@ public sealed class Array<T> : IArray<T>
     private T[] array;
     private int size;
     private int capacity;
+    // public int Length {get{return size;} set{} }
 
     
 
@@ -51,7 +52,7 @@ public sealed class Array<T> : IArray<T>
 
     
 
-    public void Remove(int i)
+    public void DelEl(int i)
     {
         if(i<=size)
         {
@@ -130,105 +131,138 @@ public sealed class Array<T> : IArray<T>
     }
 
 
-    public T Find(Func<T, bool> condition)
-    {
-        ArgumentNullException.ThrowIfNull(condition);
+    // public T Find(Func<T, bool> condition)
+    // {
+    //     ArgumentNullException.ThrowIfNull(condition);
 
-        for (int i = 0; i < size;i++)
+    //     for (int i = 0; i < size;i++)
+    //     {
+    //         if (condition(array[i]))
+    //         {
+    //             return array[i];
+    //         }
+    //     }
+    //     throw new Exception("No elements matched this condition");
+    // }
+
+
+
+    public void ApplyToAll(Func<T, T> action)
+    {
+        for(int i =0; i<size; i++)
         {
-            if (condition(array[i]))
-            {
-                return array[i];
-            }
+            array[i] = action(array[i]);
         }
-        throw new Exception("No elements matched this condition");
     }
 
-    public T[] FindAll(Func<T, bool> condition)
-    {
-        T[] elements = new T[Length(condition)];
-        int index = 0;
 
+    // public T[] FindAll(Func<T, bool> condition)
+    // {
+    //     T[] elements = new T[Length(condition)];
+    //     int index = 0;
+
+    //     for (int i = 0; i < size; i++)
+    //     {
+    //         if (condition(array[i]))
+    //         {
+    //             elements[index] = array[i];
+    //             index++;
+    //         }
+    //     }
+
+    //     return elements;
+    // }
+
+
+
+    public void Reverse()
+    {
+        T[] values = new T[size];
+        int c =0;
+        for (int i = size; i >0; i--)
+        {
+            values[c] = array[i];
+            c++;
+        }
         for (int i = 0; i < size; i++)
         {
-            if (condition(array[i]))
-            {
-                elements[index] = array[i];
-                index++;
-            }
+            array[i] = values[i];
         }
-
-        return elements;
     }
 
 
 
     public T Min()
     {
-        Comparer<T> comparer = Comparer<T>.Default;
-
-        T min = array[0];
-
-        for (int i = 1; i < size; i++)
+        T[] values = new T[size];
+        for (int i = 0; i < size; i++)
         {
-            if (comparer.Compare(array[i], min) == -1)
-            {
-                min = array[i];
-            }
+            values[i] = array[i];
         }
-        return min;
+        Array.Sort(values);
+        return values[0];
     }
 
-    public TResult Min<TResult>(Func<T, TResult> projector)
-    {
-        ArgumentNullException.ThrowIfNull(projector);
 
-        Comparer<TResult> comparer = Comparer<TResult>.Default;
+    // public TResult Min<TResult>(Func<T, TResult> projector)
+    // {
+    //     ArgumentNullException.ThrowIfNull(projector);
 
-        TResult min = projector(array[0]);
+    //     Comparer<TResult> comparer = Comparer<TResult>.Default;
 
-        for (int i = 1; i < size; i++)
-        {
-            if (comparer.Compare(projector(array[i]), min) < 0)
-            {
-                min = projector(array[i]);
-            }
-        }
-        return min;
-    }
+    //     TResult min = projector(array[0]);
+
+    //     for (int i = 1; i < size; i++)
+    //     {
+    //         if (comparer.Compare(projector(array[i]), min) < 0)
+    //         {
+    //             min = projector(array[i]);
+    //         }
+    //     }
+    //     return min;
+    // }
 
     public T Max()
     {
-        Comparer<T> comparer = Comparer<T>.Default;
-
-        T max = array[0];
-
-        for (int i = 1; i < size; i++)
+        T[] values = new T[size];
+        for (int i = 0; i < size; i++)
         {
-            if (comparer.Compare(array[i], max) > 0)
-            {
-                max = array[i];
-            }
+            values[i] = array[i];
         }
-        return max;
+        Array.Sort(values);
+        return values[size-1];
     }
 
-    public TResult Max<TResult>(Func<T, TResult> projector)
+    // public TResult Max<TResult>(Func<T, TResult> projector)
+    // {
+    //     ArgumentNullException.ThrowIfNull(projector);
+
+    //     Comparer<TResult> comparer = Comparer<TResult>.Default;
+
+    //     TResult max = projector(array[0]);
+
+    //     for (int i = 1; i < size; i++)
+    //     {
+    //         if (comparer.Compare(projector(array[i]), max) > 0)
+    //         {
+    //             max = projector(array[i]);
+    //         }
+    //     }
+    //     return max;
+    // }
+
+
+    public int CountWithIf(Func<T, bool> condition)
     {
-        ArgumentNullException.ThrowIfNull(projector);
-
-        Comparer<TResult> comparer = Comparer<TResult>.Default;
-
-        TResult max = projector(array[0]);
-
-        for (int i = 1; i < size; i++)
+        int c = 0;
+        for(int i = 0; i<size; i++)
         {
-            if (comparer.Compare(projector(array[i]), max) > 0)
+            if(condition(array[i]))
             {
-                max = projector(array[i]);
+                c++;
             }
         }
-        return max;
+        return c;
     }
 
 
