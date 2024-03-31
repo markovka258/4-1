@@ -1,9 +1,8 @@
-using System;
-using System.Collections.Concurrent;
+﻿using System;
+using System.Collections.Generic;
 
 public sealed class Array<T> : IArray<T>
 {
-    private Random random;
     private T[] array;
     private int size;
     private int capacity;
@@ -52,7 +51,7 @@ public sealed class Array<T> : IArray<T>
 
     
 
-    public void DelEl(int i)
+    public void Remove(int i)
     {
         if(i<=size)
         {
@@ -67,10 +66,6 @@ public sealed class Array<T> : IArray<T>
             size--;
             array = arr;
         }
-        else
-        {
-            Console.WriteLine("Error (Index is out of range)");
-        }
     }
 
 
@@ -81,12 +76,32 @@ public sealed class Array<T> : IArray<T>
     }
 
 
+    public int Count()
+    {
+        return size;
+    }
 
-    public bool EvenIfOne(Func<T, bool> action)
+
+    public void CountByCondition(Func<T, bool> condition)
+    {
+        int n = 0;
+        for(int i = 0; i<size; i++)
+        {
+            if(condition(array[i]))
+            {
+                n++;
+            }
+        }
+        Console.WriteLine(n);
+    }
+
+
+
+    public bool EvenIfOne(Func<T, bool> condition)
     {
         for (int i = 0; i < size; i++)
         {
-            if (action(array[i]))
+            if (condition(array[i]))
             {
                 return true;
             }
@@ -96,11 +111,11 @@ public sealed class Array<T> : IArray<T>
 
 
 
-    public bool ForEach(Func<T, bool> action)
+    public bool ForEach(Func<T, bool> condition)
     {
         for (int i = 0; i < size; i++)
         {
-            if (!action(array[i]))
+            if (!condition(array[i]))
             {
                 return false;
             }
@@ -109,20 +124,112 @@ public sealed class Array<T> : IArray<T>
     }
 
 
-
-    public void CountByCondition(Func<T, bool> action)
+    public bool Contains(T el)
     {
-        int n = 0;
-        for(int i = 0; i<size; i++)
-        {
-            if(action(array[i]))
-            {
-                n++;
-            }
-        }
-        Console.WriteLine(n);
+        return Array.IndexOf(array, el) >= 0;
     }
 
+
+    public T Find(Func<T, bool> condition)
+    {
+        ArgumentNullException.ThrowIfNull(condition);
+
+        for (int i = 0; i < size;i++)
+        {
+            if (condition(array[i]))
+            {
+                return array[i];
+            }
+        }
+        throw new Exception("No elements matched this condition");
+    }
+
+    public T[] FindAll(Func<T, bool> condition)
+    {
+        T[] elements = new T[Length(condition)];
+        int index = 0;
+
+        for (int i = 0; i < size; i++)
+        {
+            if (condition(array[i]))
+            {
+                elements[index] = array[i];
+                index++;
+            }
+        }
+
+        return elements;
+    }
+
+
+
+    public T Min()
+    {
+        Comparer<T> comparer = Comparer<T>.Default;
+
+        T min = array[0];
+
+        for (int i = 1; i < size; i++)
+        {
+            if (comparer.Compare(array[i], min) == -1)
+            {
+                min = array[i];
+            }
+        }
+        return min;
+    }
+
+    public TResult Min<TResult>(Func<T, TResult> projector)
+    {
+        ArgumentNullException.ThrowIfNull(projector);
+
+        Comparer<TResult> comparer = Comparer<TResult>.Default;
+
+        TResult min = projector(array[0]);
+
+        for (int i = 1; i < size; i++)
+        {
+            if (comparer.Compare(projector(array[i]), min) < 0)
+            {
+                min = projector(array[i]);
+            }
+        }
+        return min;
+    }
+
+    public T Max()
+    {
+        Comparer<T> comparer = Comparer<T>.Default;
+
+        T max = array[0];
+
+        for (int i = 1; i < size; i++)
+        {
+            if (comparer.Compare(array[i], max) > 0)
+            {
+                max = array[i];
+            }
+        }
+        return max;
+    }
+
+    public TResult Max<TResult>(Func<T, TResult> projector)
+    {
+        ArgumentNullException.ThrowIfNull(projector);
+
+        Comparer<TResult> comparer = Comparer<TResult>.Default;
+
+        TResult max = projector(array[0]);
+
+        for (int i = 1; i < size; i++)
+        {
+            if (comparer.Compare(projector(array[i]), max) > 0)
+            {
+                max = projector(array[i]);
+            }
+        }
+        return max;
+    }
 
 
 }
