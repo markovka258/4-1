@@ -229,46 +229,46 @@ public sealed class Array<T> : IArray<T>
 
 
 
-    // public TResult Min<TResult>(Func<T, TResult> projector)
-    // {
-    //     ArgumentNullException.ThrowIfNull(projector);
+    public TResult Min<TResult>(Func<T, TResult> projector)
+    {
+        ArgumentNullException.ThrowIfNull(projector);
 
-    //     Comparer<TResult> comparer = Comparer<TResult>.Default;
+        Comparer<TResult> comparer = Comparer<TResult>.Default;
 
-    //     TResult min = projector(array[0]);
+        TResult min = projector(array[0]);
 
-    //     for (int i = 1; i < size; i++)
-    //     {
-    //         if (comparer.Compare(projector(array[i]), min) < 0)
-    //         {
-    //             min = projector(array[i]);
-    //         }
-    //     }
-    //     return min;
-    // }
-
-
+        for (int i = 1; i < size; i++)
+        {
+            if (comparer.Compare(projector(array[i]), min) < 0)
+            {
+                min = projector(array[i]);
+            }
+        }
+        return min;
+    }
 
 
 
 
-    // public TResult Max<TResult>(Func<T, TResult> projector)
-    // {
-    //     ArgumentNullException.ThrowIfNull(projector);
 
-    //     Comparer<TResult> comparer = Comparer<TResult>.Default;
 
-    //     TResult max = projector(array[0]);
+    public TResult Max<TResult>(Func<T, TResult> projector)
+    {
+        ArgumentNullException.ThrowIfNull(projector);
 
-    //     for (int i = 1; i < size; i++)
-    //     {
-    //         if (comparer.Compare(projector(array[i]), max) > 0)
-    //         {
-    //             max = projector(array[i]);
-    //         }
-    //     }
-    //     return max;
-    // }
+        Comparer<TResult> comparer = Comparer<TResult>.Default;
+
+        TResult max = projector(array[0]);
+
+        for (int i = 1; i < size; i++)
+        {
+            if (comparer.Compare(projector(array[i]), max) > 0)
+            {
+                max = projector(array[i]);
+            }
+        }
+        return max;
+    }
 
 
 }
